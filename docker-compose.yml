@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app:rw
+      - ./uploads:/app/uploads
+    environment:
+      - UPLOAD_DIR=/app/uploads
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
+    depends_on:
+      - frontend
+
+  frontend:
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - "8001:80"
+    restart: unless-stopped
+
+# Optional: named volumes can be used for persistent data
+# volumes:
+#   uploads:
+#     driver: local
